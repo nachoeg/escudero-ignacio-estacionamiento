@@ -1,0 +1,32 @@
+<nav class="navbar fixed-top navbar-expand-lg bg-body border-bottom">
+  <div class="container-xxl">
+
+    <a class="navbar-brand" [routerLink]="['/']">
+      <img src="/assets/estacionamiento-logo.webp" alt="logo" width="30" height="30"
+        class="d-inline-block align-text-top">
+      Estacionamiento
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isAuthenticated">
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/cargar-credito']">Cargar credito</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/movimientos']">Movimientos</a>
+        </li>
+      </ul>
+      <div class="ms-auto" *ngIf="isAuthenticated">
+        <button class="btn btn-danger" (click)="logout()">Cerrar sesión</button>
+      </div>
+
+      <div class="ms-auto" *ngIf="!isAuthenticated">
+        <button class="btn" [routerLink]="['/registrarse']">Registrarse</button>
+        <button class="btn btn-primary" [routerLink]="['/iniciar-sesion']">Iniciar sesión</button>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,14 @@
+<div class="card p-3 mx-auto" style="max-width: 400px; width: fit-content">
+  <h1 class="fs-5">Agregar patente</h1>
+  <p class="text-body-secondary">Formatos validos: AAA000, AA000AA</p>
+  <form class="row g-2">
+    <div class="col-auto">
+      <input [(ngModel)]="plate" type="text" class="form-control" name="plate" id="plate" placeholder="Patente"
+        aria-label="Patente" required>
+      <small class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</small>
+    </div>
+    <div class="col-auto">
+      <button (click)="addLicensePlate()" class="btn btn-primary">Agregar</button>
+    </div>
+  </form>
+</div>
