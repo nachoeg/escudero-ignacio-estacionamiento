@@ -4,7 +4,6 @@ import com.cespi.estacionamiento.enums.TokenValidationResult;
 import com.cespi.estacionamiento.services.AuthService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpMethod;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -41,7 +40,7 @@ public class AuthFilter implements Filter {
 
     String path = httpRequest.getRequestURI();
 
-    if (isPublicPath(path, httpRequest.getMethod())) {
+    if (isPublicPath(path)) {
       chain.doFilter(request, response);
       return;
     }
@@ -64,12 +63,14 @@ public class AuthFilter implements Filter {
     }
   }
 
-  private boolean isPublicPath(String path, String method) {
-    // Define public paths here
-    // For example, if you want to allow access to the login endpoint:
-    // return path.startsWith("/api/auth/login") ||
-    // path.startsWith("/api/auth/register");
-    return path.startsWith("/api/auth/") || HttpMethod.OPTIONS.matches(method);
+  /**
+   * Determines if the request path is public and does not require authentication.
+   *
+   * @param path The request path.
+   * @return true if the path is public, false otherwise.
+   */
+  private boolean isPublicPath(String path) {
+    return path.startsWith("/api/auth/");
   }
 
   private void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {

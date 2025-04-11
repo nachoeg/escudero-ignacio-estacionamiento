@@ -4,8 +4,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -15,24 +13,16 @@ import com.cespi.estacionamiento.models.User;
 import com.cespi.estacionamiento.repositories.UserRepository;
 import com.cespi.estacionamiento.services.AuthService;
 
-import jakarta.persistence.EntityManagerFactory;
-
 @Configuration
 public class AppConfig {
-
-  @Bean
-  public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
-    JpaTransactionManager transactionManager = new JpaTransactionManager();
-    transactionManager.setEntityManagerFactory(emf);
-    return transactionManager;
-  }
 
   @Bean
   public CommandLineRunner run(UserRepository userRepository) throws Exception {
     return (_) -> {
       if (userRepository.findAll().isEmpty()) {
-        userRepository.save(new User("admin@mail.com", "1234567891", "admin"));
-        userRepository.save(new User("usuario@mail.com", "1234567890", "usuario"));
+        userRepository.save(new User("usuario1@mail.com", "1234567891", "usuario1"));
+        userRepository.save(new User("usuario2@mail.com", "1234567892", "usuario2"));
+        userRepository.save(new User("usuario3@mail.com", "1234567893", "usuario3"));
       }
     };
   }

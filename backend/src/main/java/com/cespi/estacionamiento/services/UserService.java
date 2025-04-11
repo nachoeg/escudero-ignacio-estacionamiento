@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cespi.estacionamiento.dtos.ParkingSessionDTO;
 import com.cespi.estacionamiento.dtos.UserDTO;
 import com.cespi.estacionamiento.dtos.UserGetDTO;
+import com.cespi.estacionamiento.models.ParkingSession;
 import com.cespi.estacionamiento.models.User;
 import com.cespi.estacionamiento.repositories.UserRepository;
 import com.cespi.estacionamiento.utils.JwtUtil;
@@ -16,18 +18,15 @@ import jakarta.transaction.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final AccountService accountService;
   private final JwtUtil jwtUtil;
 
-  public UserService(UserRepository userRepository, AccountService accountService, JwtUtil jwtUtil) {
+  public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
     this.userRepository = userRepository;
-    this.accountService = accountService;
     this.jwtUtil = jwtUtil;
   }
 
   public Long createUser(UserDTO userDTO) {
     User user = userRepository.save(mapToEntity(userDTO));
-    accountService.createAccount(user);
     return user.getId();
   }
 
@@ -66,13 +65,40 @@ public class UserService {
     userRepository.deleteById(id);
   }
 
+  public boolean existsByEmail(String email) {
+    return userRepository.existsByEmail(email);
+  }
+
+  public boolean existsByPhone(String phone) {
+    return userRepository.existsByPhone(phone);
+  }
+
   public UserGetDTO mapToDTO(User user) {
+    ParkingSessionDTO parkingSessionDTO = null;
+
+    ParkingSession activeSession = user.getParkingSessions().stream()
+        .filter(ParkingSession::isActive)
+        .findFirst()
+        .orElse(null);
+
+    if (activeSession != null) {
+      parkingSessionDTO = new ParkingSessionDTO(
+          activeSession.getId(),
+          activeSession.getLicensePlate().getPlate(),
+          activeSession.getStartTime(),
+          activeSession.getEndTime());
+    }
+
     return new UserGetDTO(
         user.getEmail(),
         user.getPhone(),
         user.getId(),
         user.getAccount().getBalance(),
-        user.getLicensePlates().stream().map(licensePlate -> licensePlate.getPlate()).toList());
+        user.getLicensePlates().stream().map(licensePlate -> licensePlate.getPlate()).toList(),
+        user.getParkingSessions().stream()
+            .anyMatch(parkingSession -> parkingSession.isActive()),
+        parkingSessionDTO);
+
   }
 
   public User mapToEntity(UserDTO userDTO) {

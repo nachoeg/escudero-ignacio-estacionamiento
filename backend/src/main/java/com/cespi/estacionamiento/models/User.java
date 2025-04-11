@@ -1,14 +1,17 @@
 package com.cespi.estacionamiento.models;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
@@ -47,18 +50,19 @@ public class User {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private Account account;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToMany(mappedBy = "users")
   private Set<LicensePlate> licensePlates;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ParkingSession> parkingSessions;
 
   public User(String email, String phone, String password) {
     this.email = email;
     this.phone = phone;
     this.password = password;
     this.account = new Account(this);
-  }
-
-  public void addLicensePlate(LicensePlate licensePlate) {
-    licensePlates.add(licensePlate);
+    this.licensePlates = new HashSet<>();
+    this.parkingSessions = new ArrayList<>();
   }
 
 }

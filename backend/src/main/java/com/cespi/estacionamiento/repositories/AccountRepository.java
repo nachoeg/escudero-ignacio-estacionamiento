@@ -8,4 +8,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
   Account findByUserPhone(String phone);
 
+  Account findByUserId(Long userId);
+
 }

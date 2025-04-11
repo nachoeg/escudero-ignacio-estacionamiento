@@ -34,10 +34,14 @@ public class Transaction {
   @Column(nullable = false)
   private Double amount;
 
-  public Transaction(Account account, Double amount) {
+  @Column
+  private String description;
+
+  public Transaction(Account account, Double amount, String description) {
     this.account = account;
     this.amount = amount;
     this.timestamp = LocalDateTime.now();
+    this.description = description;
   }
 
 }

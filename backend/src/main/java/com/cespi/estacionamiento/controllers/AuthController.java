@@ -45,8 +45,24 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<Long> registerUser(@Valid @RequestBody UserDTO userDTO) {
-    return ResponseEntity.ok(userService.createUser(userDTO));
+  public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO) {
+    try {
+      if (userService.existsByEmail(userDTO.getEmail())) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body("El email ya está registrado");
+      }
+
+      if (userService.existsByPhone(userDTO.getPhone())) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body("El número de teléfono ya está registrado");
+      }
+
+      Long userId = userService.createUser(userDTO);
+      return ResponseEntity.ok(userId);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error al registrar usuario: " + e.getMessage());
+    }
   }
 
   @Setter

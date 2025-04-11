@@ -4,8 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.cespi.estacionamiento.configs.JwtConfig;
 
 import java.security.Key;
 import java.util.Date;
@@ -15,14 +16,14 @@ import javax.crypto.SecretKey;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret.key}")
-    private String secretKey;
+    private JwtConfig jwtConfig;
 
-    @Value("${jwt.expiration.time}")
-    private Long expirationTime;
+    public JwtUtil(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+    }
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtConfig.getSecretKey()));
     }
 
     public String generateToken(Long userId) {
@@ -30,7 +31,7 @@ public class JwtUtil {
                 .issuedAt(new Date())
                 .signWith(getSigningKey())
                 .subject(userId.toString())
-                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .expiration(new Date(System.currentTimeMillis() + jwtConfig.getExpirationTime()))
                 .compact();
     }
 

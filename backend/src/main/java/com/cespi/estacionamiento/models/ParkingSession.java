@@ -48,4 +48,8 @@ public class ParkingSession {
     this.endTime = LocalDateTime.now();
   }
 
+  public boolean isActive() {
+    return endTime == null;
+  }
+
 }

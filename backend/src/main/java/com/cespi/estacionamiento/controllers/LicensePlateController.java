@@ -1,11 +1,8 @@
 package com.cespi.estacionamiento.controllers;
 
-import java.util.List;
-
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -36,12 +33,6 @@ public class LicensePlateController {
     Long userId = userService.getUserIdFromToken(token);
     licensePlateService.createLicensePlate(licensePlateDTO, userId);
     return ResponseEntity.ok(licensePlateDTO);
-  }
-
-  @GetMapping
-  public List<LicensePlateDTO> getUserLicensePlates(@RequestHeader("Authorization") String token) {
-    Long userId = userService.getUserIdFromToken(token);
-    return licensePlateService.getUserLicensePlates(userId);
   }
 
   @DeleteMapping("/{plate}")
