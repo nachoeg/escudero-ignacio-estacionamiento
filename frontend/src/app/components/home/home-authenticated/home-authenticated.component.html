@@ -1,15 +1,33 @@
-<div class="d-flex flex-column gap-3 mx-auto" style="max-width: 400px;">
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center pt-5">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div *ngIf="error && !loading" class="d-flex justify-content-center align-items-center pt-5 flex-column ">
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Error</h4>
+    <p>Hubo un error al cargar los datos de tu cuenta. Por favor, intenta nuevamente más tarde.</p>
+  </div>
+  <button type="button" class="btn btn-primary " (click)="refreshUserData()">Reintentar</button>
+
+</div>
+<div *ngIf="!loading && !error" class="d-flex flex-column gap-3 mx-auto" style="max-width: 450px;">
+
   <div class="card">
     <div class="card-body">
       <div class="card-subtitle">N° de cuenta: {{ userData?.phone }}</div>
-      <div class="fs-4 fw-bold">${{ userData?.balance }}</div>
+      <div class="fs-4 fw-bold">
+        $ {{ pesos }}<span class="align-top fs-6"> {{ centavos }} </span>
+      </div>
     </div>
   </div>
-  <div class="card">
+
+  <div *ngIf="!userData?.parkingSessionActive" class="card">
     <div class="card-body">
       <div class="card-title">Patentes</div>
-      <div class="d-flex gap-2">
-        <select class="form-select" name="license-plate" id="license-plate">
+      <div class="input-group">
+        <select class="form-select" name="license-plate" id="license-plate" required [(ngModel)]="selectedLicensePlate">
+          <option value="" disabled selected>Selecciona una patente</option>
           <option *ngFor="let plate of userData?.licensePlates" [value]="plate">{{ plate }}</option>
         </select>
         <button [routerLink]="['/agregar-patente']" type="button" class="btn btn-outline-primary flex-shrink-0">
@@ -19,5 +37,23 @@
       </div>
     </div>
   </div>
-  <button class="btn btn-primary">Iniciar estacionamiento</button>
+
+  <button *ngIf="!userData?.parkingSessionActive" (click)="startParkingSession()" class="btn btn-primary">Iniciar
+    estacionamiento</button>
+
+  <div *ngIf="userData?.parkingSessionActive" class="card">
+    <div class="card-header">
+      Estacionamiento activo
+    </div>
+    <div class="card-body">
+      <label for="licensePlate">Patente</label>
+      <input type="text" class="form-control" [value]="userData?.parkingSession?.licensePlate" readonly>
+      <div class="card-subtitle text-body-secondary py-2">Inicio: {{ userData?.parkingSession?.startTime | date: 'short'
+        }}
+      </div>
+      <button (click)="stopParkingSession()" class="btn btn-danger w-100">Finalizar
+        estacionamiento</button>
+    </div>
+  </div>
+
 </div>

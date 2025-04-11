@@ -1,1 +1,45 @@
-<p>transaction-history works!</p>
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center pt-5">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div *ngIf="error && !loading" class="d-flex justify-content-center align-items-center pt-5 flex-column ">
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Error</h4>
+    <p>Hubo un error al cargar los datos de tu cuenta. Por favor, intenta nuevamente más tarde.</p>
+  </div>
+  <button type="button" class="btn btn-primary " (click)="refresh()">Reintentar</button>
+</div>
+
+<div *ngIf="!loading && !error" class="mx-auto" style="max-width: fit-content;">
+  <h1 class="fs-5">Historial de Transacciones</h1>
+  <div class="table-responsive card rounded-3 p-0 m-0" style="max-width: fit-content;">
+    <table class="table table-bordered table-striped rounded-3 border overflow-hidden p-0 m-0"
+      style="max-width: fit-content;">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Monto</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2023-10-01</td>
+          <td>$100</td>
+          <td>Pago de estacionamiento</td>
+        </tr>
+        <tr>
+          <td>2023-10-02</td>
+          <td>$50</td>
+          <td>Recarga de saldo</td>
+        </tr>
+        <tr>
+          <td>2023-10-03</td>
+          <td>$200</td>
+          <td>Pago mensual</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

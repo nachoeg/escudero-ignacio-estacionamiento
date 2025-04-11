@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
+import { RegisterUser } from 'src/app/models/register-user/register-user.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -28,6 +29,10 @@ export class AuthService {
           }
         })
       );
+  }
+
+  register(user: RegisterUser) {
+    return this.http.post(`${environment.apiUrl}api/auth/register`, user);
   }
 
   saveToken(token: string) {

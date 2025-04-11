@@ -7,10 +7,10 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
+  imports: [FormsModule, CommonModule],
 })
 export class LoginComponent implements OnInit {
   phone = '';
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
 
   constructor(
-    public authService: AuthService,
+    private authService: AuthService,
     private router: Router,
     private alertService: AlertService
   ) {}

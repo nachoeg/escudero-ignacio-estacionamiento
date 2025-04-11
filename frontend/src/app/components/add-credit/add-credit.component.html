@@ -1,1 +1,11 @@
-<p>add-credit works!</p>
+<div class="card p-3 mx-auto" style="max-width: 400px; width: fit-content">
+  <h1 class="fs-5">Cargar crédito</h1>
+  <p class="text-body-secondary">Monto minimo: $100</p>
+  <div class="input-group">
+    <span class="input-group-text">$</span>
+    <input [(ngModel)]="amount" type="number" class="form-control" name="amount" id="amount" placeholder="Monto"
+      min="100" aria-label="Monto" required>
+    <button (click)="addCredit()" class="btn btn-primary">Cargar</button>
+  </div>
+  <small class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</small>
+</div>

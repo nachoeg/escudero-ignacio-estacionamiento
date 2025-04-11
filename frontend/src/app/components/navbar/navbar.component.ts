@@ -5,10 +5,10 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
-  imports: [RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
+  standalone: true,
+  imports: [RouterModule, CommonModule],
 })
 export class NavbarComponent implements OnInit {
   isAuthenticated = false;

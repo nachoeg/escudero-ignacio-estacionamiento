@@ -8,8 +8,8 @@ import { HomeAuthenticatedComponent } from './home-authenticated/home-authentica
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [CommonModule, HomeAuthenticatedComponent, HomeGuestComponent],
   standalone: true,
+  imports: [CommonModule, HomeAuthenticatedComponent, HomeGuestComponent],
 })
 export class HomeComponent implements OnInit {
   isAuthenticated = false;

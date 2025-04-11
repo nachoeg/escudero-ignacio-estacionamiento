@@ -27,7 +27,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           this.alertService.showAlert(
-            'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            'No estás autorizado. Por favor, inicia sesión nuevamente.',
             'danger'
           );
           this.authService.logout();
@@ -43,7 +43,10 @@ export class ErrorInterceptor implements HttpInterceptor {
             'danger'
           );
         } else {
-          this.alertService.showAlert(`Error: ${error.message}`, 'danger');
+          this.alertService.showAlert(
+            `Error: ${error.error ? error.error : error.message}`,
+            'danger'
+          );
         }
         return throwError(() => error);
       })

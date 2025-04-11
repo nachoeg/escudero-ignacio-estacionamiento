@@ -7,10 +7,10 @@ import { LicensePlateService } from 'src/app/services/license-plate/license-plat
 
 @Component({
   selector: 'app-add-license-plate',
-  imports: [FormsModule, CommonModule],
   templateUrl: './add-license-plate.component.html',
   styleUrls: ['./add-license-plate.component.css'],
   standalone: true,
+  imports: [FormsModule, CommonModule],
 })
 export class AddLicensePlateComponent implements OnInit {
   plate = '';

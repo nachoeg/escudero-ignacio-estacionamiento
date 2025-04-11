@@ -11,16 +11,16 @@ import {
 
 @Component({
   selector: 'app-alert',
-  imports: [CommonModule],
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.css'],
+  standalone: true,
+  imports: [CommonModule],
   animations: [
     trigger('alertAnimation', [
       state('void', style({ opacity: 0, transform: 'translateX(20px)' })),
       transition(':enter, :leave', [animate('0.3s ease-in-out')]),
     ]),
   ],
-  standalone: true,
 })
 export class AlertComponent implements OnInit {
   alerts: Alert[] = [];

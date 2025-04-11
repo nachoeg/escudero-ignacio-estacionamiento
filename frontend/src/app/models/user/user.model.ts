@@ -1,3 +1,5 @@
+import { ParkingSession } from '../parking-session/parking-session.model';
+
 export class User {
   id: number;
   email: string;
@@ -5,6 +7,8 @@ export class User {
   password: string;
   balance: number;
   licensePlates: string[];
+  parkingSessionActive: boolean;
+  parkingSession?: ParkingSession;
 
   constructor(
     id: number,
@@ -12,7 +16,9 @@ export class User {
     phone: string,
     password: string,
     balance: number,
-    licensePlates: string[]
+    licensePlates: string[],
+    parkingSessionActive: boolean,
+    parkingSession?: ParkingSession
   ) {
     this.id = id;
     this.email = email;
@@ -20,5 +26,7 @@ export class User {
     this.password = password;
     this.balance = balance;
     this.licensePlates = licensePlates;
+    this.parkingSessionActive = parkingSessionActive;
+    this.parkingSession = parkingSession;
   }
 }
