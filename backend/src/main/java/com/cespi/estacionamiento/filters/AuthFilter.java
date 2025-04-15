@@ -39,8 +39,9 @@ public class AuthFilter implements Filter {
     HttpServletResponse httpResponse = (HttpServletResponse) response;
 
     String path = httpRequest.getRequestURI();
+    String method = httpRequest.getMethod();
 
-    if (isPublicPath(path)) {
+    if (isPublicPath(path, method)) {
       chain.doFilter(request, response);
       return;
     }
@@ -69,8 +70,8 @@ public class AuthFilter implements Filter {
    * @param path The request path.
    * @return true if the path is public, false otherwise.
    */
-  private boolean isPublicPath(String path) {
-    return path.startsWith("/api/auth/") || path.startsWith("/api/holidays/get");
+  private boolean isPublicPath(String path, String method) {
+    return path.startsWith("/api/auth/") || (path.equals("/api/holidays") && method.equals("GET"));
   }
 
   private void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {

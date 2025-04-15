@@ -26,7 +26,7 @@ public class HolidayController {
     this.holidayService = holidayService;
   }
 
-  @GetMapping("/get")
+  @GetMapping
   public ResponseEntity<List<HolidayGetDTO>> getHolidays() {
     return ResponseEntity.ok(holidayService.getHolidays());
   }
