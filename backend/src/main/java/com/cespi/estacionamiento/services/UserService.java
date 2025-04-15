@@ -90,9 +90,9 @@ public class UserService {
     }
 
     return new UserGetDTO(
+        user.getId(),
         user.getEmail(),
         user.getPhone(),
-        user.getId(),
         user.getAccount().getBalance(),
         user.getLicensePlates().stream().map(licensePlate -> licensePlate.getPlate()).toList(),
         user.getParkingSessions().stream()
