@@ -1,14 +1,22 @@
-# estacionamiento
+# Estacionamiento
 
 Proyecto en Angular y Spring Boot para la gestión de un sistema de estacionamiento.
+
+### Requisitos
+
+- Java 21
+- Maven 3.9.6
+- Node.js 10.9.0
+- PostgreSQL 16.8
 
 ### Instalación
 
 1. Clonar el repositorio
 
 ```bash
-git clone <repositorio>
-cd <repositorio>
+git clone https://github.com/nachoeg/escudero-ignacio-estacionamiento
+cd escudero-ignacio-estacionamiento
+
 ```
 
 2. Instalar dependencias
@@ -20,18 +28,13 @@ cd ../backend
 mvn install
 ```
 
-3. Configurar la base de datos
+3. Configurar la base de datos PostgreSQL
+   - Instalar PostgreSQL
+   - Crear una base de datos en PostgreSQL llamada `estacionamiento`.
 
-   - Crear una base de datos en MySQL llamada `estacionamiento`.
-   - Importar el archivo `estacionamiento.sql` en la base de datos.
-   - Configurar el archivo `application.properties` en el backend con los datos de conexión a la base de datos.
-   - Ejemplo de configuración:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/estacionamiento
-spring.datasource.username=root
-spring.datasource.password=123456
-spring.jpa.hibernate.ddl-auto=update
+```bash
+sudo -u postgres psql
+CREATE DATABASE estacionamiento;
 ```
 
 ### Ejecutar el backend
@@ -47,6 +50,10 @@ mvn spring-boot:run
 cd frontend
 npm start
 ```
+
+### Ver documentación backend
+
+- Abrir el navegador y acceder a `http://localhost:8080/docs` para ver la documentación de la API REST generada por Swagger.
 
 ### Usuarios de prueba
 
