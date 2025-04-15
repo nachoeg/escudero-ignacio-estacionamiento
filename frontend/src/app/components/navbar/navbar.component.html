@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-lg bg-body border-bottom">
+<nav class="navbar fixed-top navbar-expand-md bg-body border-bottom">
   <div class="container-xxl">
     <a class="navbar-brand" [routerLink]="['/']">
       <img src="/assets/estacionamiento-logo.webp" alt="logo" width="30" height="30"
@@ -10,7 +10,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isAuthenticated">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="isAuthenticated">
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/cargar-credito']">Cargar credito</a>
         </li>
