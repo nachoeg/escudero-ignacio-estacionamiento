@@ -37,12 +37,9 @@ export class HomeAuthenticatedComponent implements OnInit {
     this.userService.getUserData().subscribe({
       next: (response) => {
         this.userData = response;
-        this.pesos = Math.floor(response.balance).toLocaleString();
-        this.centavos = Math.floor(
-          (response.balance - Math.floor(response.balance)) * 100
-        )
-          .toString()
-          .padStart(2, '0');
+        console.log('User data:', this.userData);
+        this.pesos = Math.trunc(response.balance).toLocaleString();
+        this.centavos = (response.balance % 1).toFixed(2).split('.')[1];
         this.error = false;
         this.loading = false;
       },
