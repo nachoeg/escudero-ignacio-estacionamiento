@@ -120,14 +120,13 @@ public class ParkingSessionService {
   }
 
   /**
-   * Calcula el costo total de la sesión de estacionamiento.
-   * Se basa en la duración de la sesión y el costo por fracción de 15 minutos.
-   * Si la sesión se extiende más allá del horario de operación, se ajusta el
-   * tiempo de finalización.
-   * El costo se redondea a dos decimales.
+   * Calculates the total cost of the parking session.
+   * It is based on the session duration and the cost per 15-minute fraction.
+   * If the session extends beyond operating hours, the end time is adjusted.
+   * The cost is rounded to two decimal places.
    * 
    * @param session
-   * @return Costo total de la sesión de estacionamiento.
+   * @return Total cost of the parking session.
    */
   private double getTotalCost(ParkingSession session) {
     LocalDateTime startTime = session.getStartTime();
