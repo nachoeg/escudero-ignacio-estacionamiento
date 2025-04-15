@@ -11,11 +11,15 @@ import com.cespi.estacionamiento.dtos.TransactionDTO;
 import com.cespi.estacionamiento.models.LicensePlate;
 import com.cespi.estacionamiento.models.ParkingSession;
 import com.cespi.estacionamiento.models.User;
+import com.cespi.estacionamiento.repositories.HolidayRepository;
 import com.cespi.estacionamiento.repositories.LicensePlateRepository;
 import com.cespi.estacionamiento.repositories.ParkingSessionRepository;
 import com.cespi.estacionamiento.repositories.UserRepository;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 public class ParkingSessionService {
@@ -25,15 +29,17 @@ public class ParkingSessionService {
   private final LicensePlateRepository licensePlateRepository;
   private final AccountService accountService;
   private final OperatingHoursConfig operatingHoursConfig;
+  private final HolidayRepository holidayRepository;
 
   public ParkingSessionService(ParkingSessionRepository parkingSessionRepository, UserRepository userRepository,
       LicensePlateRepository licensePlateRepository, AccountService accountService,
-      OperatingHoursConfig operatingHoursConfig) {
+      OperatingHoursConfig operatingHoursConfig, HolidayRepository holidayRepository) {
     this.parkingSessionRepository = parkingSessionRepository;
     this.userRepository = userRepository;
     this.licensePlateRepository = licensePlateRepository;
     this.accountService = accountService;
     this.operatingHoursConfig = operatingHoursConfig;
+    this.holidayRepository = holidayRepository;
   }
 
   @Transactional
@@ -45,6 +51,12 @@ public class ParkingSessionService {
     Optional<ParkingSession> activeSession = parkingSessionRepository.findByUserIdAndEndTimeIsNull(userId);
     if (activeSession.isPresent()) {
       throw new RuntimeException("El usuario ya tiene una sesión de estacionamiento activa");
+    }
+
+    Optional<ParkingSession> activeLicensePlateSession = parkingSessionRepository
+        .findByLicensePlatePlateAndEndTimeIsNull(licensePlateNumber);
+    if (activeLicensePlateSession.isPresent()) {
+      throw new RuntimeException("La patente ya tiene una sesión de estacionamiento activa");
     }
 
     LicensePlate licensePlate = licensePlateRepository.findByPlate(licensePlateNumber);
@@ -60,14 +72,19 @@ public class ParkingSessionService {
       throw new RuntimeException("El usuario no tiene saldo suficiente");
     }
 
-    // if (!operatingHoursConfig.isWithinOperatingHours(LocalTime.now())) {
-    // System.out.println("Fuera del horario de operación (" +
-    // operatingHoursConfig.getStart() + " - " +
-    // operatingHoursConfig.getEnd() + ")");
-    // throw new RuntimeException("Fuera del horario de operación (" +
-    // operatingHoursConfig.getStart() + " - " +
-    // operatingHoursConfig.getEnd() + ")");
-    // }
+    if (!operatingHoursConfig.isWithinOperatingHours(LocalTime.now())) {
+      throw new RuntimeException("Fuera del horario de operación (" +
+          operatingHoursConfig.getStart() + " - " +
+          operatingHoursConfig.getEnd() + ")");
+    }
+
+    if (LocalDate.now().getDayOfWeek().getValue() >= 6) {
+      throw new RuntimeException("No se puede iniciar una sesión de estacionamiento en fines de semana");
+    }
+
+    if (holidayRepository.existsByDate(LocalDate.now())) {
+      throw new RuntimeException("No se puede iniciar una sesión de estacionamiento en días feriados");
+    }
 
     ParkingSession session = new ParkingSession(user, licensePlate);
     parkingSessionRepository.save(session);
@@ -91,7 +108,7 @@ public class ParkingSessionService {
     session.endSession();
     parkingSessionRepository.save(session);
 
-    TransactionDTO transactionDTO = new TransactionDTO(getTotalCost(session), "Pago por estacionamiento - Patente: "
+    TransactionDTO transactionDTO = new TransactionDTO(-getTotalCost(session), "Pago por estacionamiento - Patente: "
         + session.getLicensePlate().getPlate());
     accountService.addTransaction(userId, transactionDTO);
 
@@ -102,6 +119,16 @@ public class ParkingSessionService {
         session.getEndTime());
   }
 
+  /**
+   * Calcula el costo total de la sesión de estacionamiento.
+   * Se basa en la duración de la sesión y el costo por fracción de 15 minutos.
+   * Si la sesión se extiende más allá del horario de operación, se ajusta el
+   * tiempo de finalización.
+   * El costo se redondea a dos decimales.
+   * 
+   * @param session
+   * @return Costo total de la sesión de estacionamiento.
+   */
   private double getTotalCost(ParkingSession session) {
     LocalDateTime startTime = session.getStartTime();
     LocalDateTime endTime = session.getEndTime();
@@ -109,11 +136,10 @@ public class ParkingSessionService {
         startTime.toLocalDate(),
         operatingHoursConfig.getEndTime());
     LocalDateTime adjustedEndTime = endTime.isAfter(operationalEndTime) ? operationalEndTime : endTime;
-
-    long durationInMinutes = java.time.Duration.between(startTime, adjustedEndTime).toMinutes();
-
+    long durationInMinutes = Math.max(Duration.between(startTime, adjustedEndTime).toMinutes(), 1);
     double costPerFraction = 2.50;
     long fractions = (durationInMinutes + 14) / 15;
-    return Math.round(fractions * costPerFraction * 100.0) / 100.0;
+    double result = Math.round(fractions * costPerFraction * 100.0) / 100.0;
+    return result;
   }
 }

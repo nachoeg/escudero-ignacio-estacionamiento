@@ -30,7 +30,7 @@ public class ParkingSessionController {
     this.userService = userService;
   }
 
-  @PostMapping
+  @PostMapping("/start")
   public ResponseEntity<?> startSession(@RequestHeader("Authorization") String token,
       @Valid @RequestBody LicensePlateDTO request) {
     try {

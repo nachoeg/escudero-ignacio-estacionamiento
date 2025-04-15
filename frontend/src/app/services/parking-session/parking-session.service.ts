@@ -12,7 +12,7 @@ export class ParkingSessionService {
   constructor(private http: HttpClient) {}
 
   startSession(plate: string): Observable<any> {
-    return this.http.post(this.baseUrl, { plate });
+    return this.http.post(`${this.baseUrl}/start`, { plate });
   }
 
   stopSession(sessionId: number): Observable<any> {

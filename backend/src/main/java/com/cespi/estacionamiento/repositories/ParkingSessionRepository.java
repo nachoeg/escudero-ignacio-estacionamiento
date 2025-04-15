@@ -14,4 +14,6 @@ public interface ParkingSessionRepository extends JpaRepository<ParkingSession, 
   Optional<ParkingSession> findByIdAndUserId(Long id, Long userId);
 
   List<ParkingSession> findByUserIdOrderByStartTimeDesc(Long userId);
+
+  Optional<ParkingSession> findByLicensePlatePlateAndEndTimeIsNull(String licensePlate);
 }
