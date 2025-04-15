@@ -1,5 +1,7 @@
 package com.cespi.estacionamiento.controllers;
 
+import java.util.List;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cespi.estacionamiento.dtos.TransactionDTO;
+import com.cespi.estacionamiento.dtos.TransactionGetDTO;
 import com.cespi.estacionamiento.services.AccountService;
 import com.cespi.estacionamiento.services.UserService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping(value = "/api/accounts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,6 +40,12 @@ public class AccountController {
     transaction.setDescription("Carga de crédito");
     accountService.addTransaction(userId, transaction);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/transactions-history")
+  public List<TransactionGetDTO> getTransactions(@RequestHeader("Authorization") String token) {
+    Long userId = userService.getUserIdFromToken(token);
+    return accountService.getTransactions(userId);
   }
 
 }

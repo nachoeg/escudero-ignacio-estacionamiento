@@ -13,4 +13,5 @@ public class TransactionDTO {
 
   private Double amount;
   private String description;
+  
 }

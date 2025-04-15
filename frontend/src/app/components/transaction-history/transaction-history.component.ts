@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Transaction } from 'src/app/models/transaction/transaction.model';
+import { AccountService } from 'src/app/services/account/account.service';
 
 @Component({
   selector: 'app-transaction-history',
@@ -11,17 +13,27 @@ import { Component, OnInit } from '@angular/core';
 export class TransactionHistoryComponent implements OnInit {
   loading = true;
   error = false;
+  transactions: Transaction[] = [];
 
-  constructor() {}
+  constructor(private accountService: AccountService) {}
 
   refresh() {
-    // this.loading = true;
-    // // Simulate an API call
-    // setTimeout(() => {
-    //   this.loading = false;
-    //   this.error = false;
-    // }, 2000);
+    this.loading = true;
+    this.accountService.getTransactionHistory().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.transactions = data;
+        this.loading = false;
+        this.error = false;
+      },
+      error: () => {
+        this.error = true;
+        this.loading = false;
+      },
+    });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.refresh();
+  }
 }

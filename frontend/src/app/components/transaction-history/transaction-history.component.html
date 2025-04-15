@@ -24,20 +24,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>2023-10-01</td>
-          <td>$100</td>
-          <td>Pago de estacionamiento</td>
+        <tr *ngFor="let transaction of transactions">
+          <td>{{ transaction.timestamp | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ transaction.amount | currency: 'USD' }}</td>
+          <td>{{ transaction.description }}</td>
         </tr>
-        <tr>
-          <td>2023-10-02</td>
-          <td>$50</td>
-          <td>Recarga de saldo</td>
-        </tr>
-        <tr>
-          <td>2023-10-03</td>
-          <td>$200</td>
-          <td>Pago mensual</td>
+        <tr *ngIf="transactions.length === 0">
+          <td colspan="3" class="text-center">No se encontraron transacciones.</td>
         </tr>
       </tbody>
     </table>
