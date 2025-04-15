@@ -70,7 +70,7 @@ public class AuthFilter implements Filter {
    * @return true if the path is public, false otherwise.
    */
   private boolean isPublicPath(String path) {
-    return path.startsWith("/api/auth/");
+    return path.startsWith("/api/auth/") || path.startsWith("/api/holidays/get");
   }
 
   private void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {
